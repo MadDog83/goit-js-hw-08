@@ -27,7 +27,7 @@ const galleryMarkup = galleryItems.map(item => {
 galleryList.innerHTML = galleryMarkup;
 
 // Створення нового екземпляру SimpleLightbox
-const lightbox = new SimpleLightbox('.gallery__link');
+const lightbox = new SimpleLightbox('.gallery a');
 
 // Додавання слухача подій для закриття модального вікна клавішею Escape
 lightbox.on('show.simplelightbox', () => {
