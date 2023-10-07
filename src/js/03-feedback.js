@@ -4,7 +4,7 @@ const STORAGE_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 let formData = {};
 
-// Завантажує дані з локального сховища і заповнює поля форми
+// Завантажуємо дані з локального сховища і заповнює поля форми
 function populateFormFields() {
   const savedFormData = localStorage.getItem(STORAGE_KEY);
   if (savedFormData) {
@@ -15,25 +15,37 @@ function populateFormFields() {
   }
 }
 
-// Зберігає дані форми в локальне сховище
+// Зберігаємо дані форми в локальне сховище
 const saveFormData = e => {
   formData = {...formData, [e.target.name]: e.target.value};
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
 
-// Очищує дані форми і локальне сховище
+// Очищуємо дані форми і локальне сховище
 const clearFormData = () => {
   form.reset();
   localStorage.removeItem(STORAGE_KEY);
+  formData = {};
 }
 
-// Викликає функцію populateFormFields при завантаженні сторінки
+// Перевірка, чи заповнені два поля форми
+const isFormValid = () => {
+    const values = Object.values(formData);
+    return values.length >= 2 && values.every(value => value !== '');
+  }
+
+// Викликаємо функцію populateFormFields при завантаженні сторінки
 populateFormFields();
 
-// Додає обробники подій для введення і відправлення форми
+// Додаємо обробники подій для введення і відправлення форми
 form.addEventListener('input', throttle(saveFormData, 500));
 form.addEventListener('submit', e => {
   e.preventDefault();
-  console.log(formData);
-  clearFormData();
+  // Відправляємо форму тільки якщо вона валідна
+  if (isFormValid()) {
+    console.log(formData);
+    clearFormData();
+  } else {
+    alert('Будь ласка, заповніть принаймні два поля форми');
+  }
 });
